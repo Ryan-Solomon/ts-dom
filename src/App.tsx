@@ -1,25 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+type TComment = {
+  id: number;
+  name: string;
+  body: string;
+};
+
 function App() {
+  const [data, setData] = React.useState<TComment[]>([]);
+  const [dataIdx, setDataIdx] = React.useState(0);
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const res = await fetch('https://jsonplaceholder.typicode.com/comments');
+      const data = await res.json();
+      setData(data);
+    };
+    getData();
+  }, []);
+
+  console.log(data);
+
+  if (data.length < 1) return <h1>Yoo</h1>;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1>Comment</h1>
+      <h2>{data[dataIdx].name}</h2>
+      <button onClick={() => setDataIdx((i) => i + 1)}>Next Comment</button>
+      <button>Prev Comment</button>
+    </>
   );
 }
 
